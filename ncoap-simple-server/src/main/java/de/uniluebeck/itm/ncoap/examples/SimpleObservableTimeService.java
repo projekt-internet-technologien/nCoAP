@@ -64,6 +64,18 @@ public class SimpleObservableTimeService extends ObservableWebservice<Long> {
                 ContentFormat.APP_XML,
                 "<time>\n" + "\t<hour>%02d</hour>\n" + "\t<minute>%02d</minute>\n" + "\t<second>%02d</second>\n</time>"
         );
+        
+        //Add template for Turtle payload
+        payloadTemplates.put(
+                ContentFormat.APP_TURTLE,
+                "@prefix itm: <http://itm.uni-luebeck.de/>\n" +
+                "@prefix xsd: <http://www.w3.org/2001/XMLSchema#>\n" +
+                "\n" + 
+                "itm:time1 itm:hour \"%02d\"^^xsd:integer .\n" + 
+               	"itm:time1 itm:minute \"%02d\"^^xsd:integer .\n" + 
+               	"itm:time1 itm:seconds \"%02d\"^^xsd:integer ."
+        );
+        
     }
 
     private ScheduledFuture periodicUpdateFuture;

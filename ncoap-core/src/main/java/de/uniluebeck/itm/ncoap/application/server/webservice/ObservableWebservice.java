@@ -25,29 +25,43 @@
 
 package de.uniluebeck.itm.ncoap.application.server.webservice;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.LinkedHashMultimap;
-import de.uniluebeck.itm.ncoap.communication.dispatching.client.Token;
-import de.uniluebeck.itm.ncoap.communication.dispatching.server.WebserviceManager;
-import de.uniluebeck.itm.ncoap.application.server.webservice.linkformat.EmptyLinkAttribute;
-import de.uniluebeck.itm.ncoap.application.server.webservice.linkformat.LinkAttribute;
-import de.uniluebeck.itm.ncoap.communication.events.EmptyAckReceivedEvent;
-import de.uniluebeck.itm.ncoap.communication.events.MessageIDAssignedEvent;
-import de.uniluebeck.itm.ncoap.communication.events.MessageTransferEvent;
-import de.uniluebeck.itm.ncoap.communication.events.ResetReceivedEvent;
-import de.uniluebeck.itm.ncoap.message.*;
-import de.uniluebeck.itm.ncoap.message.options.ContentFormat;
-import de.uniluebeck.itm.ncoap.message.options.OptionValue;
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelFutureListener;
 import org.jboss.netty.channel.Channels;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.InetSocketAddress;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.LinkedHashMultimap;
+
+import de.uniluebeck.itm.ncoap.application.server.webservice.linkformat.EmptyLinkAttribute;
+import de.uniluebeck.itm.ncoap.application.server.webservice.linkformat.LinkAttribute;
+import de.uniluebeck.itm.ncoap.communication.dispatching.client.Token;
+import de.uniluebeck.itm.ncoap.communication.dispatching.server.WebserviceManager;
+import de.uniluebeck.itm.ncoap.communication.events.EmptyAckReceivedEvent;
+import de.uniluebeck.itm.ncoap.communication.events.MessageIDAssignedEvent;
+import de.uniluebeck.itm.ncoap.communication.events.MessageTransferEvent;
+import de.uniluebeck.itm.ncoap.communication.events.ResetReceivedEvent;
+import de.uniluebeck.itm.ncoap.message.CoapMessage;
+import de.uniluebeck.itm.ncoap.message.CoapRequest;
+import de.uniluebeck.itm.ncoap.message.CoapResponse;
+import de.uniluebeck.itm.ncoap.message.MessageCode;
+import de.uniluebeck.itm.ncoap.message.MessageType;
+import de.uniluebeck.itm.ncoap.message.options.ContentFormat;
+import de.uniluebeck.itm.ncoap.message.options.OptionValue;
 
 
 /**

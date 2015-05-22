@@ -24,29 +24,46 @@
  */
 package de.uniluebeck.itm.ncoap.examples;
 
+import java.net.InetSocketAddress;
+import java.net.URI;
+
+import de.uniluebeck.itm.ncoap.application.client.CoapClientApplication;
 import de.uniluebeck.itm.ncoap.application.server.CoapServerApplication;
-import de.uniluebeck.itm.ncoap.application.server.webservice.linkformat.LinkAttribute;
-import de.uniluebeck.itm.ncoap.application.server.webservice.linkformat.LongLinkAttribute;
-import de.uniluebeck.itm.ncoap.message.options.ContentFormat;
+import de.uniluebeck.itm.ncoap.message.CoapRequest;
+import de.uniluebeck.itm.ncoap.message.MessageCode;
+import de.uniluebeck.itm.ncoap.message.MessageType;
 
 /**
  * Created by olli on 30.03.14.
  */
 public class SimpleCoapServer extends CoapServerApplication {
 
+	private static String host = "10.0.1.100";
+	
     public static void main(String[] args) throws Exception {
         LoggingConfiguration.configureDefaultLogging();
 
         SimpleCoapServer server = new SimpleCoapServer();
 
-        SimpleNotObservableWebservice simpleWebservice =
-                new SimpleNotObservableWebservice("/simple", "Some payload...", 5000, server.getExecutor());
-        server.registerService(simpleWebservice);
+//        SimpleNotObservableWebservice simpleWebservice =
+//                new SimpleNotObservableWebservice("/simple", "Some payload...", 5000, server.getExecutor());
+//        server.registerService(simpleWebservice);
 
-        SimpleObservableTimeService timeService = new SimpleObservableTimeService("/utc-time", 5000,
+        SimpleObservableTimeService timeService = new SimpleObservableTimeService("/utc-time", 1000,
                 server.getExecutor());
 
         server.registerService(timeService);
+        
+		URI webserviceURI = new URI("coap://" + host + ":" + CoapServerApplication.DEFAULT_COAP_SERVER_PORT + "/registry");
+		CoapRequest coapRequest = new CoapRequest(MessageType.Name.CON, MessageCode.Name.POST, webserviceURI, false);
+
+		SimpleCallback responseProcessor = new SimpleCallback();
+
+		InetSocketAddress recipient = new InetSocketAddress(host, CoapServerApplication.DEFAULT_COAP_SERVER_PORT);
+
+		CoapClientApplication c = new CoapClientApplication();
+		c.sendCoapRequest(coapRequest, responseProcessor, recipient);
+        
     }
 
 }
