@@ -68,7 +68,7 @@ public class SimpleObservableTimeService extends ObservableWebservice<Long> {
         //Add template for Turtle payload
         payloadTemplates.put(
                 ContentFormat.APP_TURTLE,
-                "@prefix itm: <http://itm.uni-luebeck.de/>\n" +
+                "@prefix itm: <http://gruppeXX.pit.itm.uni-luebeck.de/>\n" +
                 "@prefix xsd: <http://www.w3.org/2001/XMLSchema#>\n" +
                 "\n" + 
                 "itm:time1 itm:hour \"%02d\"^^xsd:integer .\n" + 

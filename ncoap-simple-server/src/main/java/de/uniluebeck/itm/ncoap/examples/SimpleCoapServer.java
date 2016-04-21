@@ -38,7 +38,7 @@ import de.uniluebeck.itm.ncoap.message.MessageType;
  */
 public class SimpleCoapServer extends CoapServerApplication {
 
-	private static String host = "10.0.1.100";
+	private static String host = "141.83.151.196";
 	
     public static void main(String[] args) throws Exception {
         LoggingConfiguration.configureDefaultLogging();
