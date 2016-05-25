@@ -45,25 +45,21 @@ public class SimpleCoapServer extends CoapServerApplication {
 
         SimpleCoapServer server = new SimpleCoapServer();
 
-//        SimpleNotObservableWebservice simpleWebservice =
-//                new SimpleNotObservableWebservice("/simple", "Some payload...", 5000, server.getExecutor());
-//        server.registerService(simpleWebservice);
+        // Non-Obserable resource, e.g., for static data
+        SimpleNotObservableWebservice simpleWebservice = new SimpleNotObservableWebservice("/simple", "Some payload...", 5000, server.getExecutor());
+        server.registerService(simpleWebservice);
 
-        SimpleObservableTimeService timeService = new SimpleObservableTimeService("/utc-time", 1000,
-                server.getExecutor());
-
+        // Obserable resource, e.g., for dynamic data
+        SimpleObservableTimeService timeService = new SimpleObservableTimeService("/utc-time", 1000, server.getExecutor());
         server.registerService(timeService);
-        
+
+        // Initial Call to the SSP to initialize the obervation
 		URI webserviceURI = new URI("coap://" + host + ":" + CoapServerApplication.DEFAULT_COAP_SERVER_PORT + "/registry");
 		CoapRequest coapRequest = new CoapRequest(MessageType.Name.CON, MessageCode.Name.POST, webserviceURI, false);
-
 		SimpleCallback responseProcessor = new SimpleCallback();
-
 		InetSocketAddress recipient = new InetSocketAddress(host, CoapServerApplication.DEFAULT_COAP_SERVER_PORT);
-
 		CoapClientApplication c = new CoapClientApplication();
 		c.sendCoapRequest(coapRequest, responseProcessor, recipient);
-        
     }
 
 }

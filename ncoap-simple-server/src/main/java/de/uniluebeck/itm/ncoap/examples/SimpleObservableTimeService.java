@@ -67,14 +67,14 @@ public class SimpleObservableTimeService extends ObservableWebservice<Long> {
         
         //Add template for Turtle payload
         payloadTemplates.put(
-                ContentFormat.APP_TURTLE,
-                "@prefix itm: <http://gruppeXX.pit.itm.uni-luebeck.de/>\n" +
-                "@prefix xsd: <http://www.w3.org/2001/XMLSchema#>\n" +
-                "\n" + 
-                "itm:time1 itm:hour \"%02d\"^^xsd:integer .\n" + 
-               	"itm:time1 itm:minute \"%02d\"^^xsd:integer .\n" + 
-               	"itm:time1 itm:seconds \"%02d\"^^xsd:integer ."
-        );
+		        ContentFormat.APP_TURTLE,
+		        "@prefix itm: <http://gruppe20.pit.itm.uni-luebeck.de/>\n" +
+		        "@prefix xsd: <http://www.w3.org/2001/XMLSchema#>\n" +
+		        "\n" + 
+		        "itm:time itm:hour \"%02d\"^^xsd:integer .\n" + 
+		       	"itm:time itm:minute \"%02d\"^^xsd:integer .\n" + 
+		       	"itm:time itm:seconds \"%02d\"^^xsd:integer ."
+		);
         
     }
 
@@ -96,6 +96,7 @@ public class SimpleObservableTimeService extends ObservableWebservice<Long> {
         //Sets the link attributes for supported content types ('ct')
         this.setLinkAttribute(new LongLinkAttribute(LongLinkAttribute.CONTENT_TYPE, ContentFormat.TEXT_PLAIN_UTF8));
         this.setLinkAttribute(new LongLinkAttribute(LongLinkAttribute.CONTENT_TYPE, ContentFormat.APP_XML));
+        this.setLinkAttribute(new LongLinkAttribute(LongLinkAttribute.CONTENT_TYPE, ContentFormat.APP_TURTLE));
 
         //Sets the link attribute for the resource type ('rt')
         String attributeValue = "The actual UTC time (updated every " + updateInterval + " millis)";

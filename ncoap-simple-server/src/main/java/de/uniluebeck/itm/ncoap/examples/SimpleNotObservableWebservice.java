@@ -54,6 +54,7 @@ public class SimpleNotObservableWebservice extends NotObservableWebservice<Strin
 
         this.setLinkAttribute(new LongLinkAttribute(LongLinkAttribute.CONTENT_TYPE, ContentFormat.TEXT_PLAIN_UTF8));
         this.setLinkAttribute(new LongLinkAttribute(LongLinkAttribute.CONTENT_TYPE, ContentFormat.APP_XML));
+        this.setLinkAttribute(new LongLinkAttribute(LongLinkAttribute.CONTENT_TYPE, ContentFormat.APP_TURTLE));
     }
 
 
@@ -127,16 +128,19 @@ public class SimpleNotObservableWebservice extends NotObservableWebservice<Strin
         responseFuture.set(coapResponse);
     }
 
-
     @Override
     public byte[] getSerializedResourceStatus(long contentFormat) {
         String result = null;
-        if(contentFormat == ContentFormat.TEXT_PLAIN_UTF8)
+        if(contentFormat == ContentFormat.TEXT_PLAIN_UTF8) {
             result = "The resource status is " + getStatus() + ".";
-
-        else if(contentFormat == ContentFormat.APP_XML)
+        } else if(contentFormat == ContentFormat.APP_XML) {
             result = "<status>" + getStatus() + "</status>";
-
+    	} else if(contentFormat == ContentFormat.APP_TURTLE) {
+            result = "@prefix itm: <http://gruppe20.pit.itm.uni-luebeck.de/>\n" +
+            "@prefix xsd: <http://www.w3.org/2001/XMLSchema#>\n" +
+            "\n" + 
+            "itm:static itm:dynamicProp itm:time.\n";
+        }
 
         if(result == null)
             return null;
