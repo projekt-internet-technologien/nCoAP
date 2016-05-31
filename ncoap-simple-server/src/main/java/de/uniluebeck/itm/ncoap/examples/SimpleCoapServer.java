@@ -48,11 +48,11 @@ public class SimpleCoapServer extends CoapServerApplication {
 	//private static int SSP_PORT = 22222;
 		
     public void registerServices() {
-        // Non-Obserable resource, e.g., for static data
+        // Non-Observable resource, e.g., for static data
         SimpleNotObservableWebservice simpleWebservice = new SimpleNotObservableWebservice("/simple", "Some payload...", 5000, this.getExecutor());
         this.registerService(simpleWebservice);
 
-        // Obserable resource, e.g., for dynamic data
+        // Observable resource, e.g., for dynamic data
         SimpleObservableTimeService timeService = new SimpleObservableTimeService("/utc-time", 1000, this.getExecutor());
         this.registerService(timeService); 	
     }
@@ -77,6 +77,5 @@ public class SimpleCoapServer extends CoapServerApplication {
         server.registerServices();
         server.registerAtSSP();        
     }
-    
     
 }
