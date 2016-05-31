@@ -26,6 +26,7 @@ package de.uniluebeck.itm.ncoap.examples;
 
 import java.net.InetSocketAddress;
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import de.uniluebeck.itm.ncoap.application.client.CoapClientApplication;
 import de.uniluebeck.itm.ncoap.application.server.CoapServerApplication;
@@ -45,31 +46,37 @@ public class SimpleCoapServer extends CoapServerApplication {
 	// Local SSP with port 22222
 	//private static String SSP_HOST = "127.0.0.1";
 	//private static int SSP_PORT = 22222;
-	
-	public SimpleCoapServer() {
-		// TODO Auto-generated constructor stub
-	}
-	
-    public static void main(String[] args) throws Exception {
-        LoggingConfiguration.configureDefaultLogging();
-
-        SimpleCoapServer server = new SimpleCoapServer(); 
-
+		
+    public void registerServices() {
         // Non-Obserable resource, e.g., for static data
-        SimpleNotObservableWebservice simpleWebservice = new SimpleNotObservableWebservice("/simple", "Some payload...", 5000, server.getExecutor());
-        server.registerService(simpleWebservice);
+        SimpleNotObservableWebservice simpleWebservice = new SimpleNotObservableWebservice("/simple", "Some payload...", 5000, this.getExecutor());
+        this.registerService(simpleWebservice);
 
         // Obserable resource, e.g., for dynamic data
-        SimpleObservableTimeService timeService = new SimpleObservableTimeService("/utc-time", 1000, server.getExecutor());
-        server.registerService(timeService);
-
-        // Initial call to the SSP to initialize the observation
+        SimpleObservableTimeService timeService = new SimpleObservableTimeService("/utc-time", 1000, this.getExecutor());
+        this.registerService(timeService); 	
+    }
+    
+    /**
+     * This method calls the resource /registry at the SSP to initiate the observation
+     * 
+     * @throws URISyntaxException
+     */
+    public void registerAtSSP() throws URISyntaxException {
 		URI webserviceURI = new URI("coap://" + SSP_HOST + ":" + SSP_PORT + "/registry");
 		CoapRequest coapRequest = new CoapRequest(MessageType.Name.CON, MessageCode.Name.POST, webserviceURI, false);
 		SimpleCallback responseProcessor = new SimpleCallback();
 		InetSocketAddress recipient = new InetSocketAddress(SSP_HOST, SSP_PORT);
 		CoapClientApplication c = new CoapClientApplication();
-		c.sendCoapRequest(coapRequest, responseProcessor, recipient);
+		c.sendCoapRequest(coapRequest, responseProcessor, recipient);    	
     }
 
+    public static void main(String[] args) throws Exception {
+        LoggingConfiguration.configureDefaultLogging();
+        SimpleCoapServer server = new SimpleCoapServer(); 
+        server.registerServices();
+        server.registerAtSSP();        
+    }
+    
+    
 }
