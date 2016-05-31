@@ -38,12 +38,22 @@ import de.uniluebeck.itm.ncoap.message.MessageType;
  */
 public class SimpleCoapServer extends CoapServerApplication {
 
-	private static String host = "141.83.151.196";
+	// Main SSP at the ITM with default port
+	private static String SSP_HOST = "141.83.151.196";
+	private static int SSP_PORT = CoapServerApplication.DEFAULT_COAP_SERVER_PORT;
+	
+	// Local SSP with port 22222
+	//private static String SSP_HOST = "127.0.0.1";
+	//private static int SSP_PORT = 22222;
+	
+	public SimpleCoapServer() {
+		// TODO Auto-generated constructor stub
+	}
 	
     public static void main(String[] args) throws Exception {
         LoggingConfiguration.configureDefaultLogging();
 
-        SimpleCoapServer server = new SimpleCoapServer();
+        SimpleCoapServer server = new SimpleCoapServer(); 
 
         // Non-Obserable resource, e.g., for static data
         SimpleNotObservableWebservice simpleWebservice = new SimpleNotObservableWebservice("/simple", "Some payload...", 5000, server.getExecutor());
@@ -53,11 +63,11 @@ public class SimpleCoapServer extends CoapServerApplication {
         SimpleObservableTimeService timeService = new SimpleObservableTimeService("/utc-time", 1000, server.getExecutor());
         server.registerService(timeService);
 
-        // Initial Call to the SSP to initialize the obervation
-		URI webserviceURI = new URI("coap://" + host + ":" + CoapServerApplication.DEFAULT_COAP_SERVER_PORT + "/registry");
+        // Initial call to the SSP to initialize the observation
+		URI webserviceURI = new URI("coap://" + SSP_HOST + ":" + SSP_PORT + "/registry");
 		CoapRequest coapRequest = new CoapRequest(MessageType.Name.CON, MessageCode.Name.POST, webserviceURI, false);
 		SimpleCallback responseProcessor = new SimpleCallback();
-		InetSocketAddress recipient = new InetSocketAddress(host, CoapServerApplication.DEFAULT_COAP_SERVER_PORT);
+		InetSocketAddress recipient = new InetSocketAddress(SSP_HOST, SSP_PORT);
 		CoapClientApplication c = new CoapClientApplication();
 		c.sendCoapRequest(coapRequest, responseProcessor, recipient);
     }
